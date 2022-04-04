@@ -2,6 +2,7 @@
   <div v-if="leads" class="home">
     <order-overview :leads="leads" />
     <mini-stats :stats="stats" />
+    <!-- <charts :charts="" /> -->
   </div>
 </template>
 
@@ -9,6 +10,7 @@
 import { leadService } from '@/services/lead-service'
 import OrderOverview from '../components/order-overview.vue'
 import MiniStats from '../components/mini-stats.vue'
+import Charts from '../components/charts.vue'
 
 export default {
   name: 'Home',
@@ -22,6 +24,6 @@ export default {
     this.leads = await leadService.query()
     this.stats = await leadService.getPerStatusStats()
   },
-  components: { OrderOverview, MiniStats },
+  components: { OrderOverview, MiniStats, Charts },
 }
 </script>
