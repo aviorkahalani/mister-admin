@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       bgColors: {
-        done: 'teal accent-1',
+        done: 'green lighten-3',
         open: 'cyan accent-1',
         hold: 'orange accent-1',
         process: 'indigo accent-1',

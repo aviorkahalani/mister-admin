@@ -8,29 +8,31 @@ export const leadService = {
   getPerSrcStats,
   getStatusName,
   getSrcName,
+  getRevenue,
 }
 
 const STORAGE_KEY = 'leads_db'
 const URL =
-  'http://www.filltext.com/?rows=20&id={string|5}&src=[1,2,3]&status=[1,2,3,4]&updatedAt={date|10-10-2019,10-12-2020}&fullname={firstName}~{lastName}&email={email}&phone={phone|format}&price={number|100}&txt={lorem}&@countries={rows=2*name={country}*score={decimalRange|10000,20000}}&pretty=true'
+  'http://www.filltext.com/?rows=50&id={string|5}&src=[1,2,3]&status=[1,2,3,4]&updatedAt={date|1-1-2021,1-1-2022}&fullname={firstName}~{lastName}&email={email}&phone={phone|format}&price={number|1000}&txt={lorem}&@countries={rows=2*name={country}*score={decimalRange|10000,20000}}&pretty=true'
 
 let gLeads
-_createLeads()
-
 let gFilterBy = {}
+
 const statuses = {
   1: 'open',
   2: 'process',
   3: 'hold',
   4: 'done',
 }
+
 const srcs = {
   1: 'Google',
   2: 'Facebook',
   3: 'Direct Search',
 }
 
-function query() {
+async function query() {
+  await _createLeads()
   return Promise.resolve(gLeads)
 }
 
@@ -62,12 +64,21 @@ function getPerSrcStats() {
   }, {})
 }
 
+async function getRevenue() {
+  return gLeads.reduce((acc, lead) => {
+    const date = new Date(lead.updatedAt)
+    // const month = date.toLocaleString().split(',')[0].split('/')[0]
+    const month = date.toString().split(' ')[1]
+    acc[month] = acc[month] ? acc[month] + lead.price : lead.price
+    return acc
+  }, {})
+}
+
 async function _createLeads() {
-  let leads = utilService.loadFromStorage(STORAGE_KEY)
-  if (!leads || !leads.length) {
-    let res = await axios.get(URL)
-    leads = res.data
-    utilService.saveToStorage(STORAGE_KEY, leads)
+  gLeads = utilService.loadFromStorage(STORAGE_KEY) || []
+  if (!gLeads || !gLeads.length) {
+    let { data } = await axios.get(URL)
+    gLeads = data
+    utilService.saveToStorage(STORAGE_KEY, gLeads)
   }
-  gLeads = leads
 }

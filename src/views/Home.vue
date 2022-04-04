@@ -1,9 +1,9 @@
 <template>
-  <div v-if="leads && statusStats && srcStats" class="home">
+  <section v-if="leads && statusStats && srcStats && revenueStats" class="home">
     <v-container>
       <v-row>
         <v-col class="d-flex">
-          <sparkline />
+          <sparkline :revenueStats="revenueStats" />
         </v-col>
         <v-col>
           <v-container>
@@ -21,7 +21,7 @@
     </v-container>
     <mini-stats :stats="statusStats" />
     <order-overview :leads="leads" />
-  </div>
+  </section>
 </template>
 
 <script>
@@ -39,12 +39,14 @@ export default {
       leads: null,
       statusStats: null,
       srcStats: null,
+      revenueStats: null,
     }
   },
   async created() {
     this.leads = await leadService.query()
     this.statusStats = await leadService.getPerStatusStats()
     this.srcStats = await leadService.getPerSrcStats()
+    this.revenueStats = await leadService.getRevenue()
   },
   components: { OrderOverview, MiniStats, StatusChart, SrcChart, Sparkline },
 }

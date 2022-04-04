@@ -1,6 +1,7 @@
 <template>
   <v-sparkline
     :value="value"
+    :labels="labels"
     :gradient="gradient"
     :smooth="radius || false"
     :padding="padding"
@@ -25,18 +26,26 @@ const gradients = [
 ]
 
 export default {
+  props: {
+    revenueStats: Object,
+  },
   data: () => ({
     width: 4,
     radius: 10,
-    padding: 3,
+    padding: 8,
     lineCap: 'round',
     gradient: gradients[5],
-    value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+    value: null,
+    labels: null,
     gradientDirection: 'top',
     gradients,
     fill: false,
     type: 'trend',
     autoLineWidth: false,
   }),
+  created() {
+    this.value = Object.values(this.revenueStats)
+    this.labels = Object.keys(this.revenueStats)
+  },
 }
 </script>
