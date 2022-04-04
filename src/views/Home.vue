@@ -1,12 +1,23 @@
 <template>
-  <div class="home">HOME</div>
+  <div v-if="leads" class="home">
+    <order-overview :leads="leads" />
+  </div>
 </template>
 
 <script>
-// @ is an alias to /src
+import { leadService } from '@/services/lead-service'
+import OrderOverview from '../components/order-overview.vue'
 
 export default {
   name: 'Home',
-  components: {},
+  data() {
+    return {
+      leads: null,
+    }
+  },
+  async created() {
+    this.leads = await leadService.query()
+  },
+  components: { OrderOverview },
 }
 </script>
