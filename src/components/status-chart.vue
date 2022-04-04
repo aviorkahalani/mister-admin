@@ -1,5 +1,11 @@
 <template>
-  <Doughnut :chart-id="chartId" :chart-options="chartOptions" :chart-data="chartData" />
+  <Doughnut
+    :chart-id="chartId"
+    :chart-options="chartOptions"
+    :chart-data="chartData"
+    :width="200"
+    :height="200"
+  />
 </template>
 
 <script>
@@ -28,11 +34,16 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Leads Per Status',
+          },
+        },
       },
     }
   },
   created() {
-    console.log('statusStats')
     this.chartData.labels = Object.keys(this.statusStats)
     this.chartData.datasets[0].data = Object.values(this.statusStats)
   },

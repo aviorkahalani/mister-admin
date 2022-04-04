@@ -1,9 +1,9 @@
 <template>
-  <section v-if="items" class="order-overview">
+  <section v-if="items" class="order-overview ma-4 rounded">
     <v-data-table
-      dense
       :headers="headers"
       :items="items"
+      :items-per-page="5"
       item-key="id"
       class="order-overview__table"
     ></v-data-table>

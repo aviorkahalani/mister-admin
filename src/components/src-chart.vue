@@ -1,5 +1,11 @@
 <template>
-  <Pie :chart-id="chartId" :chart-options="chartOptions" :chart-data="chartData" />
+  <Pie
+    :chart-id="chartId"
+    :chart-options="chartOptions"
+    :chart-data="chartData"
+    :width="200"
+    :height="200"
+  />
 </template>
 
 <script>
@@ -28,11 +34,16 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Leads Per Source',
+          },
+        },
       },
     }
   },
   created() {
-    console.log('srcStats')
     this.chartData.labels = Object.keys(this.srcStats)
     this.chartData.datasets[0].data = Object.values(this.srcStats)
   },
