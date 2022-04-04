@@ -1,11 +1,9 @@
 <template>
-  <section v-if="statusStats" class="charts">
-    <Doughnut :chart-options="chartOptions" :chart-data="chartData" />
-  </section>
+  <Pie :chart-id="chartId" :chart-options="chartOptions" :chart-data="chartData" />
 </template>
 
 <script>
-import { Doughnut } from 'vue-chartjs/legacy'
+import { Pie } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
@@ -13,15 +11,16 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 export default {
   name: 'charts',
   props: {
-    statusStats: Object,
+    srcStats: Object,
   },
   data() {
     return {
+      chartId: Math.random() + '',
       chartData: {
         labels: null,
         datasets: [
           {
-            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
             data: null,
           },
         ],
@@ -33,11 +32,12 @@ export default {
     }
   },
   created() {
-    this.chartData.labels = Object.keys(this.statusStats)
-    this.chartData.datasets[0].data = Object.values(this.statusStats)
+    console.log('srcStats')
+    this.chartData.labels = Object.keys(this.srcStats)
+    this.chartData.datasets[0].data = Object.values(this.srcStats)
   },
   components: {
-    Doughnut,
+    Pie,
   },
 }
 </script>

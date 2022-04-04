@@ -1,7 +1,5 @@
 <template>
-  <section v-if="statusStats" class="charts">
-    <Doughnut :chart-options="chartOptions" :chart-data="chartData" />
-  </section>
+  <Doughnut :chart-id="chartId" :chart-options="chartOptions" :chart-data="chartData" />
 </template>
 
 <script>
@@ -17,6 +15,7 @@ export default {
   },
   data() {
     return {
+      chartId: Math.random() + '',
       chartData: {
         labels: null,
         datasets: [
@@ -33,6 +32,7 @@ export default {
     }
   },
   created() {
+    console.log('statusStats')
     this.chartData.labels = Object.keys(this.statusStats)
     this.chartData.datasets[0].data = Object.values(this.statusStats)
   },
