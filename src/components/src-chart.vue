@@ -1,5 +1,6 @@
 <template>
   <Pie
+    v-if="srcStats"
     :chart-id="chartId"
     :chart-options="chartOptions"
     :chart-data="chartData"
@@ -19,19 +20,23 @@ export default {
   props: {
     srcStats: Object,
   },
-  data() {
-    return {
-      chartId: Math.random() + '',
-      chartData: {
-        labels: null,
+  computed: {
+    chartId() {
+      return Math.random() + ''
+    },
+    chartData() {
+      return {
+        labels: Object.keys(this.srcStats),
         datasets: [
           {
             backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
-            data: null,
+            data: Object.values(this.srcStats),
           },
         ],
-      },
-      chartOptions: {
+      }
+    },
+    chartOptions() {
+      return {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -40,12 +45,8 @@ export default {
             text: 'Leads Per Source',
           },
         },
-      },
-    }
-  },
-  created() {
-    this.chartData.labels = Object.keys(this.srcStats)
-    this.chartData.datasets[0].data = Object.values(this.srcStats)
+      }
+    },
   },
   components: {
     Pie,

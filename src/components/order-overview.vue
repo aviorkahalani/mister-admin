@@ -35,12 +35,17 @@ export default {
         const formatedLead = {
           id,
           fullname,
-          from: countries[0].name,
+          from: this.getFormattedCountries(countries),
           price,
           status: leadService.getStatusName(status),
         }
         return formatedLead
       })
+    },
+  },
+  methods: {
+    getFormattedCountries(countries) {
+      return countries.map((c) => c.name).join(', ')
     },
   },
 }

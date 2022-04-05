@@ -9,6 +9,7 @@ export const leadService = {
   getStatusName,
   getSrcName,
   getRevenue,
+  getCountries,
 }
 
 const STORAGE_KEY = 'leads_db'
@@ -33,7 +34,21 @@ const srcs = {
 
 async function query() {
   await _createLeads()
-  return Promise.resolve(gLeads)
+
+  let filteredLeads = JSON.parse(JSON.stringify(gLeads))
+
+  if (gFilterBy.txt) {
+    const regex = new RegExp(gFilterBy.txt, 'i')
+    filteredLeads = filteredLeads.filter((lead) => regex.test(lead.txt))
+  }
+
+  if (gFilterBy.countries?.length) {
+    filteredLeads = filteredLeads.filter((lead) => {
+      return lead.countries.some((c) => gFilterBy.countries.includes(c.name))
+    })
+  }
+
+  return Promise.resolve(filteredLeads)
 }
 
 function setFilterBy(filterBy) {
@@ -48,8 +63,9 @@ function getSrcName(src) {
   return srcs[src]
 }
 
-function getPerStatusStats() {
-  return gLeads.reduce((acc, lead) => {
+async function getPerStatusStats() {
+  const leads = await query(gFilterBy)
+  return leads.reduce((acc, lead) => {
     acc[statuses[lead.status]] = acc[statuses[lead.status]]
       ? acc[statuses[lead.status]] + 1
       : 1
@@ -57,21 +73,30 @@ function getPerStatusStats() {
   }, {})
 }
 
-function getPerSrcStats() {
-  return gLeads.reduce((acc, lead) => {
+async function getPerSrcStats() {
+  const leads = await query(gFilterBy)
+  return leads.reduce((acc, lead) => {
     acc[srcs[lead.src]] = acc[srcs[lead.src]] ? acc[srcs[lead.src]] + 1 : 1
     return acc
   }, {})
 }
 
 async function getRevenue() {
-  return gLeads.reduce((acc, lead) => {
+  const leads = await query(gFilterBy)
+  return leads.reduce((acc, lead) => {
     const date = new Date(lead.updatedAt)
     // const month = date.toLocaleString().split(',')[0].split('/')[0]
     const month = date.toString().split(' ')[1]
     acc[month] = acc[month] ? acc[month] + lead.price : lead.price
     return acc
   }, {})
+}
+
+async function getCountries() {
+  let countries = gLeads.map((lead) => {
+    return lead.countries.map((country) => country.name)
+  })
+  return Array.from(new Set(countries.flat()))
 }
 
 async function _createLeads() {

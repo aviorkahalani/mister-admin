@@ -22,12 +22,10 @@ function getRandomInt(min, max) {
 }
 
 function debounce(func, wait = 1000) {
-  console.log('Debouncing...')
   let timeout
 
   return function executedFunction(...args) {
     const later = () => {
-      console.log('Go search!')
       clearTimeout(timeout)
       func(...args)
     }

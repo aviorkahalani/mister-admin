@@ -1,5 +1,6 @@
 <template>
   <v-sparkline
+    v-if="revenueStats"
     :value="value"
     :labels="labels"
     :gradient="gradient"
@@ -35,17 +36,19 @@ export default {
     padding: 8,
     lineCap: 'round',
     gradient: gradients[5],
-    value: null,
-    labels: null,
     gradientDirection: 'top',
     gradients,
     fill: false,
     type: 'trend',
     autoLineWidth: false,
   }),
-  created() {
-    this.value = Object.values(this.revenueStats)
-    this.labels = Object.keys(this.revenueStats)
+  computed: {
+    value() {
+      return Object.values(this.revenueStats)
+    },
+    labels() {
+      return Object.keys(this.revenueStats)
+    },
   },
 }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <Doughnut
+    v-if="statusStats"
     :chart-id="chartId"
     :chart-options="chartOptions"
     :chart-data="chartData"
@@ -19,19 +20,23 @@ export default {
   props: {
     statusStats: Object,
   },
-  data() {
-    return {
-      chartId: Math.random() + '',
-      chartData: {
-        labels: null,
+  computed: {
+    chartId() {
+      return Math.random() + ''
+    },
+    chartData() {
+      return {
+        labels: Object.keys(this.statusStats),
         datasets: [
           {
             backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-            data: null,
+            data: Object.values(this.statusStats),
           },
         ],
-      },
-      chartOptions: {
+      }
+    },
+    chartOptions() {
+      return {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -40,12 +45,8 @@ export default {
             text: 'Leads Per Status',
           },
         },
-      },
-    }
-  },
-  created() {
-    this.chartData.labels = Object.keys(this.statusStats)
-    this.chartData.datasets[0].data = Object.values(this.statusStats)
+      }
+    },
   },
   components: {
     Doughnut,
